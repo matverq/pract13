@@ -1,0 +1,53 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Carbonium\\Downloads\\pract13\\pract13\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{6510061F-47DC-4819-A99F-77F70C91033C}|pract13.vcxproj|C:\\Users\\Carbonium\\Downloads\\pract13\\pract13\\pract13.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{6510061F-47DC-4819-A99F-77F70C91033C}|pract13.vcxproj|solutionrelative:pract13.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{F200E0C3-B749-4783-A9E5-E2733819710F}|..\\pract13_work\\pract13_work.vcxproj|C:\\Users\\Carbonium\\Downloads\\pract13\\pract13_work\\pract13_work.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "pract13_work.cpp",
+              "DocumentMoniker": "C:\\Users\\Carbonium\\Downloads\\pract13\\pract13_work\\pract13_work.cpp",
+              "RelativeDocumentMoniker": "..\\pract13_work\\pract13_work.cpp",
+              "ToolTip": "C:\\Users\\Carbonium\\Downloads\\pract13\\pract13_work\\pract13_work.cpp",
+              "RelativeToolTip": "..\\pract13_work\\pract13_work.cpp",
+              "ViewState": "AgIAABIAAAAAAAAAAAAAACoAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-11-02T06:55:38.651Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "pract13.cpp",
+              "DocumentMoniker": "C:\\Users\\Carbonium\\Downloads\\pract13\\pract13\\pract13.cpp",
+              "RelativeDocumentMoniker": "pract13.cpp",
+              "ToolTip": "C:\\Users\\Carbonium\\Downloads\\pract13\\pract13\\pract13.cpp",
+              "RelativeToolTip": "pract13.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAALEAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2026-11-02T06:53:35.25Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
