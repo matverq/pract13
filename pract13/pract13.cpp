@@ -1,7 +1,7 @@
 ﻿#include <iostream>
 #include <Windows.h>
-#include <conio.h>
 #include <string>
+#include <conio.h>
 
 using namespace std;
 
@@ -9,170 +9,169 @@ struct Racer {
     string name;
     PROCESS_INFORMATION pi;
     DWORD priorityClass;
-    DWORD duration;
-    bool isFinished;
+    DWORD time;
+    bool finish;
     int place;
 };
 
 string getPriorityName(DWORD priority) {
     if (priority == IDLE_PRIORITY_CLASS) return "IDLE";
-    if (priority == BELOW_NORMAL_PRIORITY_CLASS) return "BELOW_NORMAL";
-    if (priority == NORMAL_PRIORITY_CLASS) return "NORMAL";
-    if (priority == ABOVE_NORMAL_PRIORITY_CLASS) return "ABOVE_NORMAL";
-    if (priority == HIGH_PRIORITY_CLASS) return "HIGH";
-    return "UNKNOWN";
+    else if (priority == BELOW_NORMAL_PRIORITY_CLASS) return "BELOW_NORMAL";
+    else if (priority == NORMAL_PRIORITY_CLASS) return "NORMAL";
+    else if (priority == ABOVE_NORMAL_PRIORITY_CLASS) return "ABOVE_NORMAL";
+    else if (priority == HIGH_PRIORITY_CLASS) return "HIGH";
+    return "UNKOWN";
 }
 
-string changPriority(Racer& racer, bool increase) {
-    string oldPri = getPriorityName(racer.priorityClass);
+string changePriority(Racer& r, bool pr) {
+    string oldPriority = getPriorityName(r.priorityClass);
 
-    if (increase) {
-        if (racer.priorityClass == IDLE_PRIORITY_CLASS) racer.priorityClass = BELOW_NORMAL_PRIORITY_CLASS;
-        else if (racer.priorityClass == BELOW_NORMAL_PRIORITY_CLASS) racer.priorityClass = NORMAL_PRIORITY_CLASS;
-        else if (racer.priorityClass == NORMAL_PRIORITY_CLASS) racer.priorityClass = ABOVE_NORMAL_PRIORITY_CLASS;
-        else if (racer.priorityClass == ABOVE_NORMAL_PRIORITY_CLASS) racer.priorityClass = HIGH_PRIORITY_CLASS;
+    if (pr) {
+        if (r.priorityClass == IDLE_PRIORITY_CLASS) r.priorityClass = BELOW_NORMAL_PRIORITY_CLASS;
+        else if (r.priorityClass == BELOW_NORMAL_PRIORITY_CLASS) r.priorityClass = NORMAL_PRIORITY_CLASS;
+        else if (r.priorityClass == NORMAL_PRIORITY_CLASS) r.priorityClass = ABOVE_NORMAL_PRIORITY_CLASS;
+        else if (r.priorityClass == ABOVE_NORMAL_PRIORITY_CLASS) r.priorityClass = HIGH_PRIORITY_CLASS;
     }
     else {
-        if (racer.priorityClass == HIGH_PRIORITY_CLASS) racer.priorityClass = ABOVE_NORMAL_PRIORITY_CLASS;
-        else if (racer.priorityClass == ABOVE_NORMAL_PRIORITY_CLASS) racer.priorityClass = NORMAL_PRIORITY_CLASS;
-        else if (racer.priorityClass == NORMAL_PRIORITY_CLASS) racer.priorityClass = BELOW_NORMAL_PRIORITY_CLASS;
-        else if (racer.priorityClass == BELOW_NORMAL_PRIORITY_CLASS) racer.priorityClass = IDLE_PRIORITY_CLASS;
+        if (r.priorityClass == HIGH_PRIORITY_CLASS) r.priorityClass = ABOVE_NORMAL_PRIORITY_CLASS;
+        else if (r.priorityClass == ABOVE_NORMAL_PRIORITY_CLASS) r.priorityClass = NORMAL_PRIORITY_CLASS;
+        else if (r.priorityClass == NORMAL_PRIORITY_CLASS) r.priorityClass = BELOW_NORMAL_PRIORITY_CLASS;
+        else if (r.priorityClass == BELOW_NORMAL_PRIORITY_CLASS) r.priorityClass = IDLE_PRIORITY_CLASS;
     }
-
-    if (SetPriorityClass(racer.pi.hProcess, racer.priorityClass)) {
-        string newPri = getPriorityName(racer.priorityClass);
-        return ">>> (СМЕНА ПРИОРИТЕТА) " + racer.name + ": " + oldPri + " -> " + newPri + " <<<";
+    if (SetPriorityClass(r.pi.hProcess, r.priorityClass)) {
+        string newPriority = getPriorityName(r.priorityClass);
+        return "Смена проиоритета " + r.name + ": " + oldPriority + " -> " + newPriority;
     }
-    return ">>> (ОШИБКА) Не удалось сменить приоритет для " + racer.name;
+    return "Не удалось сменить приоритет для " + r.name;
 }
 
-int main() {
+int main()
+{
     setlocale(LC_ALL, "Russian");
+    
+    int startRange;
+    int endRange;
 
-    int startRange, endRange;
     cout << "Введите начало диапазона: ";
     cin >> startRange;
     cout << "Введите конец диапазона: ";
     cin >> endRange;
 
-    wchar_t appName[] = L"C:(путь)pract13_work.exe";
+    wchar_t appName[] = L"C:\\Users\\st310-02\\Desktop\\Politov_PR-31\\pract13_work\\x64\\Debug\\pract13_work.exe";
     int numRacers = 0;
-    while (numRacers < 2 || numRacers > 5) {
-        cout << "Введите количество участников (2-5): ";
+    while (numRacers<2 || numRacers>5)
+    {
+        cout << "Введите количество участников (2-5)";
         cin >> numRacers;
-        cin.ignore();
     }
+    Racer r[5];
 
-    Racer racers[5];
+    cout << "Установка приоритета каждому процессу\n";
+    cout << "1. IDLE_PRIORITY_CLASS\n2. BELOW_NORMAL_PRIORITY_CLASS\n3. NORMAL_PRIORITY_CLASS\n4. ABOVE_NORMAL_PRIORITY_CLASS\n5. HIGH_PRIORITY_CLASS\n";
 
-    cout << "\n--- НАСТРОЙКА ПРИОРИТЕТОВ ---\n";
-    cout << "1. IDLE\n2. BELOW_NORMAL\n3. NORMAL\n4. ABOVE_NORMAL\n5. HIGH\n";
-
-    for (int i = 0; i < numRacers; i++) {
-        racers[i].name = "Racer_" + to_string(i + 1);
-        racers[i].isFinished = false;
-        racers[i].place = 0;
-        racers[i].duration = 0;
-
+    for (int i = 0; i < numRacers; i++)
+    {
+        r[i].name = "Racer_" + to_string(i + 1);
+        r[i].finish = false;
+        r[i].place = 0;
+        r[i].time = 0;
+        
         int choice;
-        cout << "Выберите приоритет для " << racers[i].name << " (1-5): ";
+        cout << "Выберите приоритет для " << r[i].name << " (1-5)";
         cin >> choice;
 
-        switch (choice) {
-        case 1: racers[i].priorityClass = IDLE_PRIORITY_CLASS; break;
-        case 2: racers[i].priorityClass = BELOW_NORMAL_PRIORITY_CLASS; break;
-        case 3: racers[i].priorityClass = NORMAL_PRIORITY_CLASS; break;
-        case 4: racers[i].priorityClass = ABOVE_NORMAL_PRIORITY_CLASS; break;
-        case 5: racers[i].priorityClass = HIGH_PRIORITY_CLASS; break;
-        default: racers[i].priorityClass = NORMAL_PRIORITY_CLASS; break;
+        switch (choice)
+        {
+        case 1: r[i].priorityClass = IDLE_PRIORITY_CLASS; break;
+        case 2: r[i].priorityClass = BELOW_NORMAL_PRIORITY_CLASS; break;
+        case 3: r[i].priorityClass = NORMAL_PRIORITY_CLASS;  break;
+        case 4: r[i].priorityClass = ABOVE_NORMAL_PRIORITY_CLASS;  break;
+        case 5: r[i].priorityClass = HIGH_PRIORITY_CLASS; break;
+        default:
+            r[i].priorityClass = NORMAL_PRIORITY_CLASS;  break;
+            break;
         }
     }
 
-    cout << "--- ГОНКА НАЧАЛАСЬ ---\n";
-    cout << "Все процессы запущены. Ожидание финиша...\n";
-    cout << "Управление: нажмите номер робота (1-" << numRacers << "), затем '+' или '-' для смены приоритета.\n";
+    cout << "Начало гонки\n";
+    cout << "Для смены приоритета: нажмите номер робота, после чего + или - для смены приоритета\n";
 
-    for (int i = 0; i < numRacers; i++) {
+    for (int i = 0; i < numRacers; i++)
+    {
         wstring cmd = L"pract13_work.exe " + to_wstring(startRange) + L" " + to_wstring(endRange);
         STARTUPINFO si;
         ZeroMemory(&si, sizeof(si));
         si.cb = sizeof(si);
-
-        if (!CreateProcess(appName, &cmd[0], NULL, NULL, FALSE, CREATE_NEW_CONSOLE, NULL, NULL, &si, &racers[i].pi)) {
-            cout << "ОШИБКА Не удалось запустить " << racers[i].name << ". Код: " << GetLastError() << "\n";
+        
+        if (!CreateProcess(appName, &cmd[0], NULL, NULL, FALSE,  CREATE_SUSPENDED | CREATE_NEW_CONSOLE, NULL, NULL, &si, &r[i].pi)) {
+            cout << r[i].name << " не запущен по ошибке: " << GetLastError();
             return 1;
         }
+        SetProcessAffinityMask(r[i].pi.hProcess, 1);
+        SetPriorityClass(r[i].pi.hProcess, r[i].priorityClass);
 
-        SetProcessAffinityMask(racers[i].pi.hProcess, 1);
-        SetPriorityClass(racers[i].pi.hProcess, racers[i].priorityClass);
-
-        cout << "(СТАРТ) " << racers[i].name << " (PID: " << racers[i].pi.dwProcessId
-            << ") | Приоритет: " << getPriorityName(racers[i].priorityClass) << "\n";
+        cout << "Старт " << r[i].name << " PID:" << r[i].pi.dwProcessId << ", приоритет: " << getPriorityName(r[i].priorityClass) << "\n";
     }
+
+    for (int i = 0; i < numRacers; i++)
+    {
+        ResumeThread(r[i].pi.hThread);
+    }
+
     int finishCount = 0;
     int selRacer = 0;
 
     while (finishCount < numRacers) {
-
-        for (int i = 0; i < numRacers; i++) {
-            if (!racers[i].isFinished) {
-                if (WaitForSingleObject(racers[i].pi.hProcess, 0) == WAIT_OBJECT_0) {
-                    racers[i].isFinished = true;
-
-                    DWORD exitCode = 0;
-                    GetExitCodeProcess(racers[i].pi.hProcess, &exitCode);
-                    racers[i].duration = exitCode;
-
+        for (int i = 0; i < numRacers; i++)
+        {
+            if (!r[i].finish) {
+                if (WaitForSingleObject(r[i].pi.hProcess, 0) == WAIT_OBJECT_0) {
+                    r[i].finish = true;
+                    DWORD exite = 0;
+                    GetExitCodeProcess(r[i].pi.hProcess, &exite);
+                    r[i].time = exite;
                     finishCount++;
 
-                    cout << "(ФИНИШ) " << racers[i].name << " завершил вычисления. Время: " << racers[i].duration << " мс.\n";
+                    cout << "Финиш " << r[i].name << " завершил вычисления, время " << r[i].time << "м/с\n";
                 }
             }
         }
-
         if (_kbhit()) {
             char c = _getch();
             if (c >= '1' && c <= '0' + numRacers) {
                 selRacer = c - '1';
-                cout << "(ВЫБОР) Выбран " << racers[selRacer].name << "\n";
+                cout << "Выбран " << r[selRacer].name << "\n";
             }
             else if (c == '+') {
-                cout << changPriority(racers[selRacer], true) << "\n";
+                cout << changePriority(r[selRacer], true);
             }
             else if (c == '-') {
-                cout << changPriority(racers[selRacer], false) << "\n";
+                cout << changePriority(r[selRacer], false);
             }
         }
-
         Sleep(50);
     }
-
-    for (int i = 0; i < numRacers - 1; i++) {
+    for (int i = 0; i < numRacers-1; i++)
+    {
         for (int j = 0; j < numRacers - i - 1; j++) {
-            if (racers[j].duration > racers[j + 1].duration) {
-                Racer temp = racers[j];
-                racers[j] = racers[j + 1];
-                racers[j + 1] = temp;
-            }
+            if (r[j].time > r[i].time) {
+                Racer t = r[j];
+                r[j] = r[j + 1];
+                r[j + 1] = t;
+            } 
         }
     }
-
-    for (int i = 0; i < numRacers; i++) {
-        racers[i].place = i + 1;
+    for (int i = 0; i < numRacers; i++)
+    {
+        r[i].place = i + 1;
     }
-
-    cout << "                    ИТОГИ ГОНКИ\n";
-    cout << "Место | PID    | Имя        | Приоритет     | Время (мс)\n";
-
-    for (int i = 0; i < numRacers; i++) {
-        cout << "  " << racers[i].place << "   | "
-            << racers[i].pi.dwProcessId << " | "
-            << racers[i].name << " | "
-            << getPriorityName(racers[i].priorityClass) << " | "
-            << racers[i].duration << "\n";
-
-        CloseHandle(racers[i].pi.hThread);
-        CloseHandle(racers[i].pi.hProcess);
+    cout << "Конец гонки\n";
+    cout << "Место | PID | Имя | Приоритет | Время\n";
+    for (int i = 0; i < numRacers; i++)
+    {
+        cout << " " << r[i].place << "  | " << r[i].pi.dwProcessId << " | " << r[i].name << " | " << getPriorityName(r[i].priorityClass)
+            << "  | " << r[i].time << "\n";
+        CloseHandle(r[i].pi.hThread);
+        CloseHandle(r[i].pi.hProcess);
     }
-    system("pause");
 }
